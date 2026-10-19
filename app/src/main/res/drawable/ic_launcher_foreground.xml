@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Magnifying Glass Rim (Cyan/Teal) -->
+    <path
+        android:fillColor="#06B6D4"
+        android:pathData="M48,27 C36.4,27 27,36.4 27,48 C27,59.6 36.4,69 48,69 C52.9,69 57.4,67.3 61,64.5 L73.5,77 C74.5,78 76.1,78 77.1,77 L78,76.1 C79,75.1 79,73.5 78,72.5 L65.5,60 C68.3,56.4 70,51.9 70,48 C70,36.4 60.6,27 48,27 Z M48,63 C39.7,63 33,56.3 33,48 C33,39.7 39.7,33 48,33 C56.3,33 63,39.7 63,48 C63,56.3 56.3,63 48,63 Z" />
+
+    <!-- Video Play Symbol inside glass (White) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,39 L57,48 L44,57 Z" />
+
+    <!-- Detective checkmark badge on top right -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M69,32 C69,28.7 66.3,26 63,26 C59.7,26 57,28.7 57,32 C57,35.3 59.7,38 63,38 C66.3,38 69,35.3 69,32 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M61,32.2 L59.6,30.8 L58.6,31.8 L61,34.2 L66,29.2 L65,28.2 Z" />
+
+    <!-- Sparkle / clue star -->
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M78,38 L80,43 L85,45 L80,47 L78,52 L76,47 L71,45 L76,43 Z" />
+</vector>
