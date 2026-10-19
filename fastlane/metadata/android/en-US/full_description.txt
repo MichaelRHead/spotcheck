@@ -1,0 +1,20 @@
+Can you spot the fake before sharing? Welcome to SpotCheck: Media Detective—an interactive media literacy adventure designed for pre-teens, middle schoolers (ages 9–13), parents, and classrooms!
+
+Social video feeds move fast, and it has never been easier to get tricked by sensational clickbait, out-of-context video cuts, hidden sponsorships, or AI-generated illusions. SpotCheck puts young digital citizens in the role of a Media Detective with a safe, offline, simulated social video feed where every video is a mystery waiting to be solved.
+
+HOW TO PLAY & INVESTIGATE
+• Scroll the Simulated Video Feed: Watch engaging, animated short-form video scenarios modeled after real-world viral trends—with zero external links, zero tracking, and zero real social media hazards.
+• Activate the Forensic Lens: Pause any video and turn on the Detective Magnifying Glass to reveal interactive hotspots directly on the video frame and headline.
+• Read Laterally in the Comments: Open the simulated comments drawer to separate skeptical fact-checkers from automated hype bots.
+• Run a Source Check: Inspect creator bios, account history, verification status, and original upload dates using the S.I.F.T. framework.
+• Submit Your Verdict: Classify each case as Credible & Verified, Clickbait / Exaggerated, Out-of-Context Clip, AI-Generated / Manipulated, or Sponsored Bias. Receive immediate, encouraging feedback and earn Detective XP!
+
+KEY LEARNING FEATURES
+• The S.I.F.T. Field Guide: Master the four gold-standard pillars of digital verification—Stop, Investigate the Source, Find Better Coverage, and Trace Claims to the Original Context.
+• Red Flag Encyclopedia: Explore visual checklists for spotting AI video glitches (warped paws, extra fingers, garbled background text), emotional rage-bait headlines, and selective jump-cuts.
+• Interactive Clickbait Headline Lab: Experiment in the sandbox by swapping sensational alarm words into neutral news stories to see firsthand how clickbait manipulates curiosity and emotion.
+• Detective Dossier & Badges: Track accuracy rates, maintain investigation streaks, level up from Junior Fact Finder to Chief Truth Officer, and unlock 6 specialized detective badges.
+
+BUILT FOR SAFETY & PRIVACY
+• 100% Offline & Self-Contained: All video scenarios, comments, and forensic clues are bundled directly inside the app.
+• No Data Collection: SpotCheck does not collect personal information, require an account, access the camera/microphone, or display third-party advertisements.

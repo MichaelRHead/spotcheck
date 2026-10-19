@@ -1,0 +1,4 @@
+• Added interactive Fact-Check Service with detailed reliability scores and red-flag explanations.
+• Added Detective Badge progression tracker and milestone rewards.
+• Added S.I.F.T. Field Guide and interactive Clickbait Headline Sandbox.
+• Updated to Version 4.0 (versionCode 4).

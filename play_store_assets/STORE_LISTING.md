@@ -59,14 +59,14 @@ BUILT FOR SAFETY & PRIVACY
 
 ---
 
-## 3. Release Notes (Version 2.0 / Version Code 2)
+## 3. Release Notes (Version 4.0 / Version Code 4)
 
 ```text
 <en-US>
 • Added interactive Fact-Check Service with detailed reliability scores and red-flag explanations.
 • Added Detective Badge progression tracker and milestone rewards.
 • Added S.I.F.T. Field Guide and interactive Clickbait Headline Sandbox.
-• Updated to Version 2.0 (versionCode 2).
+• Updated to Version 4.0 (versionCode 4).
 </en-US>
 ```
 
