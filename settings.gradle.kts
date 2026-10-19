@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "SpotCheck Media Detective"
+rootProject.name = "SpotCheck"
 
 include(":app")

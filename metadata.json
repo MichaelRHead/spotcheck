@@ -1,5 +1,5 @@
 {
-  "name": "SpotCheck Media Detective",
+  "name": "SpotCheck",
   "description": "Interactive media literacy and misinformation detection app helping kids spot clickbait, bias, and AI deepfakes.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
