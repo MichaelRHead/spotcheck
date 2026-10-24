@@ -123,7 +123,7 @@ fun SimulatedVideoPlayer(
             }
         }
 
-        // Forensic Clue Hotspots (visible in Inspection Mode or always accessible by tapping)
+        // Forensic Clue Hotspots (visible in Inspection Mode or always accessible by tapping/D-pad)
         if (isInspectionMode) {
             mediaCase.clues.forEach { clue ->
                 val clueDiscovered = clue.id in discoveredClueIds
@@ -134,7 +134,12 @@ fun SimulatedVideoPlayer(
                     modifier = Modifier
                         .offset(x = posX - 28.dp, y = posY - 28.dp)
                         .size(56.dp)
-                        .clickable { onClueClicked(clue) }
+                        .tvFocusableClick(
+                            focusBorderColor = Color.White,
+                            shape = CircleShape,
+                            scaleOnFocus = 1.18f,
+                            onClick = { onClueClicked(clue) }
+                        )
                         .testTag("hotspot_${clue.id}"),
                     contentAlignment = Alignment.Center
                 ) {

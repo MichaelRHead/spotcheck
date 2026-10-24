@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+
+    <!-- Deep Cyber-Noir Background -->
+    <path
+        android:fillColor="#0B0F19"
+        android:pathData="M0,0h320v180h-320z" />
+
+    <!-- Subtle Slate Card Frame -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M12,12h296v156h-296z" />
+
+    <!-- Top Cyber Accent Bar (Cyan) -->
+    <path
+        android:fillColor="#06B6D4"
+        android:pathData="M12,12h296v6h-296z" />
+
+    <!-- Bottom Purple Accent Bar -->
+    <path
+        android:fillColor="#7C3AED"
+        android:pathData="M12,162h296v6h-296z" />
+
+    <!-- Decorative Radar Rings on Left -->
+    <path
+        android:fillColor="#1638BDF8"
+        android:pathData="M85,90m-56,0a56,56 0,1 1,112 0a56,56 0,1 1,-112 0" />
+    <path
+        android:fillColor="#2606B6D4"
+        android:pathData="M85,90m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0" />
+
+    <!-- Magnifying Glass Lens -->
+    <path
+        android:fillColor="#0F172A"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="6"
+        android:pathData="M80,84m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
+
+    <!-- Magnifying Glass Handle -->
+    <path
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:pathData="M98,102L116,120" />
+
+    <!-- Verified Checkmark Inside Lens -->
+    <path
+        android:strokeColor="#10B981"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M70,84L77,91L91,77" />
+
+    <!-- Right-Side Brand Bars (Stylized Typography Blocks + Badge Indicators) -->
+    <!-- Title Bar: SPOTCHECK -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M148,54h136v18h-136z" />
+    <!-- Cyan Accent Dot -->
+    <path
+        android:fillColor="#06B6D4"
+        android:pathData="M292,63m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+
+    <!-- Subtitle Pill: MEDIA DETECTIVE TV -->
+    <path
+        android:fillColor="#7C3AED"
+        android:pathData="M148,82h110v14h-110z" />
+
+    <!-- Forensic Status Dots -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M156,116m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M178,116m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+    <path
+        android:fillColor="#EC4899"
+        android:pathData="M200,116m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+
+    <!-- Waveform / Equalizer Bars -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M224,108h6v16h-6zM234,104h6v24h-6zM244,110h6v12h-6zM254,102h6v28h-6zM264,107h6v18h-6z" />
+</vector>

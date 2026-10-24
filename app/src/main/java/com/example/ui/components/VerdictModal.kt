@@ -270,7 +270,11 @@ private fun VerdictOptionCard(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .tvFocusableClick(
+                focusBorderColor = accentColor,
+                shape = RoundedCornerShape(14.dp),
+                onClick = onClick
+            )
             .testTag(testTag)
     ) {
         Row(

@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.components.tvFocusableClick
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
 
@@ -288,7 +289,13 @@ private fun SandboxToggleRow(
     Card(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .tvFocusableClick(
+                focusBorderColor = Color(0xFFD946EF),
+                shape = RoundedCornerShape(14.dp),
+                onClick = { onCheckedChange(!checked) }
+            )
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
