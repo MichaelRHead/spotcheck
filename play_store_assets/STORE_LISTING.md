@@ -16,7 +16,11 @@ All required graphic and text assets for publishing **SpotCheck** to the Google 
 | **Phone Screenshot 4** | `screenshot_4_dossier_lab_1080x1920.png` | `1080 x 1920 px` | PNG (9:16) | Detective Dossier, Badges & Clickbait Lab |
 | **7-inch Tablet Screenshot** | `tablet_7inch_1920x1080.png` | `1920 x 1080 px` | PNG (16:9) | Tablet view of Feed & Forensic Inspector |
 | **10-inch Tablet Screenshot** | `tablet_10inch_1920x1080.png` | `1920 x 1080 px` | PNG (16:9) | Expanded split-screen view for 10" tablets |
-| **Android TV Banner** | `tv_banner_1280x720.png` | `1280 x 720 px` | 24-bit PNG (no alpha) | Required for Android TV / Google TV form factor |
+| **Android TV Banner (Standard)** | `tv_banner_1280x720.png` | `1280 x 720 px` | 24-bit PNG (no alpha) | Required Play Console TV Banner (`fastlane/.../tvBanner.png`) |
+| **Android TV Banner (Full HD)** | `tv_banner_fhd_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (no alpha) | High-res 1080p 16:9 Primary Brand TV Banner |
+| **Android TV Banner (4K UHD)** | `tv_banner_uhd_3840x2160.png` | `3840 x 2160 px` | 24-bit PNG (no alpha) | Ultra-HD 4K 16:9 Promotional TV Hero Banner |
+| **Android TV Banner (Forensic Lab)** | `tv_banner_forensic_lab_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (no alpha) | Alternate TV Banner: Deepfake & AI Artifact Inspector |
+| **Android TV Banner (Couch Co-Op)** | `tv_banner_couch_coop_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (no alpha) | Alternate TV Banner: Living Room & Classroom S.I.F.T. Edition |
 | **Android TV Screenshot 1** | `tv_screenshot_1_feed_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (16:9) | 10-foot TV UI: Navigation Rail, Feed & S.I.F.T. |
 | **Android TV Screenshot 2** | `tv_screenshot_2_field_guide_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (16:9) | 10-foot TV UI: Clickbait Lab & Detective Badges |
 
