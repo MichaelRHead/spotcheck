@@ -16,6 +16,9 @@ All required graphic and text assets for publishing **SpotCheck** to the Google 
 | **Phone Screenshot 4** | `screenshot_4_dossier_lab_1080x1920.png` | `1080 x 1920 px` | PNG (9:16) | Detective Dossier, Badges & Clickbait Lab |
 | **7-inch Tablet Screenshot** | `tablet_7inch_1920x1080.png` | `1920 x 1080 px` | PNG (16:9) | Tablet view of Feed & Forensic Inspector |
 | **10-inch Tablet Screenshot** | `tablet_10inch_1920x1080.png` | `1920 x 1080 px` | PNG (16:9) | Expanded split-screen view for 10" tablets |
+| **Android TV Banner** | `tv_banner_1280x720.png` | `1280 x 720 px` | 24-bit PNG (no alpha) | Required for Android TV / Google TV form factor |
+| **Android TV Screenshot 1** | `tv_screenshot_1_feed_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (16:9) | 10-foot TV UI: Navigation Rail, Feed & S.I.F.T. |
+| **Android TV Screenshot 2** | `tv_screenshot_2_field_guide_1920x1080.png` | `1920 x 1080 px` | 24-bit PNG (16:9) | 10-foot TV UI: Clickbait Lab & Detective Badges |
 
 ---
 

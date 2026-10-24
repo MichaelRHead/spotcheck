@@ -16,8 +16,8 @@ android {
     applicationId = "com.aistudio.spotcheck.mvlk"
     minSdk = 24
     targetSdk = 36
-    versionCode = 7
-    versionName = "7.0"
+    versionCode = 8
+    versionName = "8.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
