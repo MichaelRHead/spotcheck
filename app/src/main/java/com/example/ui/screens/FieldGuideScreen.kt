@@ -50,12 +50,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
+import com.example.ui.components.ScreenAudioMuteButton
 
 @Composable
 fun FieldGuideScreen(
+    isAudioMuted: Boolean = true,
+    onToggleAudioMute: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -90,7 +95,7 @@ fun FieldGuideScreen(
                 }
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "MEDIA LITERACY ACADEMY",
                     color = Color(0xFF38BDF8),
@@ -105,6 +110,14 @@ fun FieldGuideScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            ScreenAudioMuteButton(
+                isMuted = isAudioMuted,
+                screenLabel = stringResource(R.string.audio_guide_label),
+                accentColor = Color(0xFF38BDF8),
+                onToggleMute = onToggleAudioMute,
+                testTag = "audio_mute_button"
+            )
         }
 
         // Tabs

@@ -33,9 +33,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
+import com.example.ui.components.ScreenAudioMuteButton
 import com.example.ui.components.tvFocusableClick
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
@@ -93,7 +96,7 @@ fun SandboxScreen(
                 }
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "EXPERIMENTAL LAB",
                     color = Color(0xFFF0ABFC),
@@ -108,6 +111,14 @@ fun SandboxScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            ScreenAudioMuteButton(
+                isMuted = uiState.isAudioMuted,
+                screenLabel = stringResource(R.string.audio_sandbox_label),
+                accentColor = Color(0xFFD946EF),
+                onToggleMute = { viewModel.toggleAudioMute() },
+                testTag = "audio_mute_button"
+            )
         }
 
         Spacer(modifier = Modifier.height(14.dp))

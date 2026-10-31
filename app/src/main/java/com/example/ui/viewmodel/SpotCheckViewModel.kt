@@ -33,6 +33,7 @@ data class SpotCheckUiState(
     val currentCaseIndex: Int = 0,
     val cases: List<MediaCase> = emptyList(),
     val isPlaying: Boolean = true,
+    val isAudioMuted: Boolean = true,
     val videoProgressSec: Float = 0f,
     val isInspectionMode: Boolean = false,
     val discoveredClueIds: Set<String> = emptySet(),
@@ -144,6 +145,14 @@ class SpotCheckViewModel(
 
     fun setPlayback(playing: Boolean) {
         _uiState.update { it.copy(isPlaying = playing) }
+    }
+
+    fun toggleAudioMute() {
+        _uiState.update { it.copy(isAudioMuted = !it.isAudioMuted) }
+    }
+
+    fun setAudioMuted(muted: Boolean) {
+        _uiState.update { it.copy(isAudioMuted = muted) }
     }
 
     fun seekTo(progress: Float) {

@@ -28,4 +28,11 @@ class ExampleRobolectricTest {
         assertTrue("Every case should have detectable clues", cases.all { it.clues.isNotEmpty() })
         assertTrue("Every case should have comments", cases.all { it.comments.isNotEmpty() })
     }
+
+    @Test
+    fun `audio is muted by default in ui state`() {
+        val initialState = com.example.ui.viewmodel.SpotCheckUiState()
+        assertTrue("Audio must be muted by default", initialState.isAudioMuted)
+    }
 }
+

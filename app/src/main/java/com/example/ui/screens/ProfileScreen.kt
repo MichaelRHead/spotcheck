@@ -44,7 +44,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import com.example.data.model.DetectiveBadge
+import com.example.ui.components.ScreenAudioMuteButton
 import com.example.ui.components.toSceneDrawableRes
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
@@ -83,7 +86,7 @@ fun ProfileScreen(
                     }
                 }
                 Spacer(modifier = Modifier.width(12.dp))
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "FACT-CHECKER DOSSIER",
                         color = Color(0xFFA78BFA),
@@ -98,6 +101,14 @@ fun ProfileScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                Spacer(modifier = Modifier.width(8.dp))
+                ScreenAudioMuteButton(
+                    isMuted = uiState.isAudioMuted,
+                    screenLabel = stringResource(R.string.audio_profile_label),
+                    accentColor = Color(0xFFA78BFA),
+                    onToggleMute = { viewModel.toggleAudioMute() },
+                    testTag = "audio_mute_button"
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))

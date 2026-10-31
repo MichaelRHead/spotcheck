@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SpotCheck</string>
+    <string name="audio_unmute_action">Unmute audio</string>
+    <string name="audio_mute_action">Mute audio</string>
+    <string name="audio_status_muted">Muted</string>
+    <string name="audio_status_playing">Audio On</string>
+    <string name="audio_feed_label">Stream Audio</string>
+    <string name="audio_guide_label">Academy Ambience</string>
+    <string name="audio_sandbox_label">Lab Synth</string>
+    <string name="audio_profile_label">HQ Theme</string>
 </resources>
+

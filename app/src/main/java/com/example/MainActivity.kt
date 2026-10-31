@@ -66,6 +66,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.local.SpotCheckDatabase
 import com.example.data.repository.MediaDetectiveRepository
+import com.example.ui.components.SpotCheckScreenAudioEffect
 import com.example.ui.components.isGoogleTvMode
 import com.example.ui.screens.FeedScreen
 import com.example.ui.screens.FieldGuideScreen
@@ -99,6 +100,9 @@ class MainActivity : ComponentActivity() {
 fun SpotCheckApp(viewModel: SpotCheckViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isTvDevice = isGoogleTvMode()
+
+    // Lifecycle-aware screen audio synthesizer (muted by default until user clicks unmute)
+    SpotCheckScreenAudioEffect(uiState = uiState)
 
     // Handle back button when away from Feed
     BackHandler(enabled = uiState.currentScreen != AppScreen.FEED) {
@@ -458,7 +462,10 @@ private fun SpotCheckScreenContent(
                 viewModel = viewModel,
                 uiState = uiState
             )
-            AppScreen.FIELD_GUIDE -> FieldGuideScreen()
+            AppScreen.FIELD_GUIDE -> FieldGuideScreen(
+                isAudioMuted = uiState.isAudioMuted,
+                onToggleAudioMute = { viewModel.toggleAudioMute() }
+            )
             AppScreen.SANDBOX -> SandboxScreen(
                 viewModel = viewModel,
                 uiState = uiState

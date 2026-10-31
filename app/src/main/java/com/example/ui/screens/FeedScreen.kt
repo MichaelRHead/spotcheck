@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeOff
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Chat
@@ -52,9 +54,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import com.example.data.model.MediaCase
 import com.example.ui.components.ClueDetailSheet
 import com.example.ui.components.CommentsDrawer
+import com.example.ui.components.ScreenAudioMuteButton
 import com.example.ui.components.SimulatedVideoPlayer
 import com.example.ui.components.SourceCheckSheet
 import com.example.ui.components.VerdictModal
@@ -245,7 +250,18 @@ private fun TvWidescreenFeedLayout(
                     )
                 }
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ScreenAudioMuteButton(
+                        isMuted = uiState.isAudioMuted,
+                        screenLabel = stringResource(R.string.audio_feed_label),
+                        accentColor = Color(0xFFA78BFA),
+                        onToggleMute = { viewModel.toggleAudioMute() },
+                        testTag = "audio_mute_button"
+                    )
+
                     Surface(
                         shape = RoundedCornerShape(10.dp),
                         color = Color(0xFF1E293B),
@@ -762,8 +778,22 @@ private fun MobileCompactFeedLayout(
                 .align(Alignment.BottomEnd)
                 .padding(end = 12.dp, bottom = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Audio Mute / Unmute Action (Muted by default)
+            FeedActionButton(
+                icon = if (uiState.isAudioMuted) {
+                    Icons.AutoMirrored.Filled.VolumeOff
+                } else {
+                    Icons.AutoMirrored.Filled.VolumeUp
+                },
+                label = if (uiState.isAudioMuted) "Unmute" else "Audio ON",
+                isActive = !uiState.isAudioMuted,
+                activeColor = Color(0xFFA78BFA),
+                onClick = { viewModel.toggleAudioMute() },
+                testTag = "audio_mute_button"
+            )
+
             // Next & Prev Case Quick Controls
             Surface(
                 shape = CircleShape,
