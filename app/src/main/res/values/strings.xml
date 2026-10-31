@@ -8,5 +8,6 @@
     <string name="audio_guide_label">Academy Ambience</string>
     <string name="audio_sandbox_label">Lab Synth</string>
     <string name="audio_profile_label">HQ Theme</string>
+    <string name="app_version_overlay">v%1$s</string>
 </resources>
 

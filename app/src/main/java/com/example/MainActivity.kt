@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
@@ -51,6 +52,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
@@ -59,9 +62,12 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.local.SpotCheckDatabase
@@ -469,6 +475,42 @@ fun SpotCheckApp(viewModel: SpotCheckViewModel) {
                 }
             }
         }
+
+        // Subtle, persistent low-opacity version badge in the corner across all screens and modals
+        AppVersionOverlay(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(top = 6.dp, end = 10.dp)
+                .zIndex(10f)
+        )
+    }
+}
+
+@Composable
+fun AppVersionOverlay(
+    versionName: String = BuildConfig.VERSION_NAME,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .alpha(0.42f)
+            .focusProperties { canFocus = false }
+            .background(
+                color = Color(0x660F172A),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+            .testTag("app_version_overlay")
+    ) {
+        Text(
+            text = stringResource(id = R.string.app_version_overlay, versionName),
+            color = Color(0xFFE2E8F0),
+            fontSize = 10.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = 0.4.sp
+        )
     }
 }
 

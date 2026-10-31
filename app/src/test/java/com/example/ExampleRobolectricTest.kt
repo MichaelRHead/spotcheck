@@ -34,5 +34,12 @@ class ExampleRobolectricTest {
         val initialState = com.example.ui.viewmodel.SpotCheckUiState()
         assertTrue("Audio must be muted by default", initialState.isAudioMuted)
     }
+
+    @Test
+    fun `app version overlay formats BuildConfig version correctly`() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val formattedVersion = context.getString(R.string.app_version_overlay, BuildConfig.VERSION_NAME)
+        assertEquals("v${BuildConfig.VERSION_NAME}", formattedVersion)
+    }
 }
 
