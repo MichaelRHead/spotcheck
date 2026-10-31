@@ -1,18 +1,21 @@
 package com.example.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Shield
@@ -34,7 +36,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -44,20 +45,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.data.model.CaseVerdict
 import com.example.data.model.FactCheckResult
 import com.example.data.model.MediaCase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun VerdictModal(
@@ -71,180 +83,260 @@ fun VerdictModal(
 ) {
     var selectedVerdict by remember { mutableStateOf<CaseVerdict?>(null) }
     var detectiveNotes by remember { mutableStateOf("") }
+    val firstOptionFocusRequester = remember { FocusRequester() }
+    val submitButtonFocusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .testTag("verdict_modal_card"),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // If not yet submitted, show the verdict choices
-                if (submissionResult == null) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+    BackHandler(onBack = onDismiss)
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x99020617))
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onDismiss
+                )
+                .onPreviewKeyEvent { event ->
+                    if (event.type == KeyEventType.KeyUp &&
+                        (event.key == Key.Back || event.key == Key.Escape)
                     ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = Color(0xFF7C3AED),
-                            modifier = Modifier.size(36.dp)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.AutoAwesome,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
+                        onDismiss()
+                        true
+                    } else {
+                        false
+                    }
+                }
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                modifier = modifier
+                    .widthIn(max = 580.dp)
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {}
+                    )
+                    .testTag("verdict_modal_card"),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+                border = BorderStroke(1.5.dp, Color(0xFF7C3AED)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    // If not yet submitted, show the verdict choices
+                    if (submissionResult == null) {
+                        RequestInitialTvFocus(focusRequester = firstOptionFocusRequester)
+
+                        val selectVerdictAndFocusSubmit: (CaseVerdict) -> Unit = { verdict ->
+                            selectedVerdict = verdict
+                            coroutineScope.launch {
+                                delay(40)
+                                runCatching { submitButtonFocusRequester.requestFocus() }
                             }
                         }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Column {
-                            Text(
-                                text = "OFFICIAL FACT VERDICT",
-                                color = Color(0xFFA78BFA),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.sp
-                            )
-                            Text(
-                                text = "Is This Article Reliable?",
-                                color = Color.White,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        IconButton(
-                            onClick = onDismiss,
-                            modifier = Modifier.testTag("close_verdict_dialog")
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Close dialog",
-                                tint = Color(0xFF94A3B8)
+                            Surface(
+                                shape = CircleShape,
+                                color = Color(0xFF7C3AED),
+                                modifier = Modifier.size(36.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.AutoAwesome,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "OFFICIAL FACT VERDICT",
+                                    color = Color(0xFFA78BFA),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.sp
+                                )
+                                Text(
+                                    text = "Is This Article Reliable?",
+                                    color = Color.White,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color(0xFF0F172A),
+                                border = BorderStroke(1.dp, Color(0x5594A3B8)),
+                                modifier = Modifier
+                                    .tvFocusableClick(
+                                        focusBorderColor = Color.White,
+                                        shape = RoundedCornerShape(12.dp),
+                                        onClick = onDismiss
+                                    )
+                                    .testTag("close_verdict_dialog")
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Close dialog",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "Close",
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Based on your investigation, classify this content to receive a full reliability assessment:",
+                            color = Color(0xFFCBD5E1),
+                            fontSize = 13.sp
+                        )
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        // Verdict Choice Cards
+                        VerdictOptionCard(
+                            title = "Verified Authentic (Reliable)",
+                            subtitle = "Credible journalism, factual evidence, and verified institutions.",
+                            icon = Icons.Default.CheckCircle,
+                            accentColor = Color(0xFF10B981),
+                            isSelected = selectedVerdict == CaseVerdict.ACCURATE_CREDIBLE,
+                            onClick = { selectVerdictAndFocusSubmit(CaseVerdict.ACCURATE_CREDIBLE) },
+                            testTag = "verdict_authentic",
+                            modifier = Modifier.focusRequester(firstOptionFocusRequester)
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        VerdictOptionCard(
+                            title = "Misleading / Out of Context (Misinformation)",
+                            subtitle = "Real footage repurposed with false dates, altered timeline, or cut quotes.",
+                            icon = Icons.Default.Timer,
+                            accentColor = Color(0xFFF59E0B),
+                            isSelected = selectedVerdict == CaseVerdict.OUT_OF_CONTEXT,
+                            onClick = { selectVerdictAndFocusSubmit(CaseVerdict.OUT_OF_CONTEXT) },
+                            testTag = "verdict_out_of_context"
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        VerdictOptionCard(
+                            title = "AI Generated / Manipulated (Misinformation)",
+                            subtitle = "Deepfake video, synthetic voice clone, or visual generative glitch.",
+                            icon = Icons.Default.SmartToy,
+                            accentColor = Color(0xFF8B5CF6),
+                            isSelected = selectedVerdict == CaseVerdict.AI_MANIPULATED,
+                            onClick = { selectVerdictAndFocusSubmit(CaseVerdict.AI_MANIPULATED) },
+                            testTag = "verdict_ai"
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        VerdictOptionCard(
+                            title = "Clickbait Exaggeration (Misinformation)",
+                            subtitle = "Gross emotional exaggeration or hidden sales pitch to provoke clicks.",
+                            icon = Icons.Default.Warning,
+                            accentColor = Color(0xFFEF4444),
+                            isSelected = selectedVerdict == CaseVerdict.CLICKBAIT_EXAGGERATED,
+                            onClick = { selectVerdictAndFocusSubmit(CaseVerdict.CLICKBAIT_EXAGGERATED) },
+                            testTag = "verdict_clickbait"
+                        )
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        // Optional Notes Field
+                        OutlinedTextField(
+                            value = detectiveNotes,
+                            onValueChange = { detectiveNotes = it },
+                            label = { Text("What gave it away? (Optional Note)") },
+                            placeholder = { Text("e.g. The paws glitched, or the movie poster was from 2011...") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("detective_notes_input"),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF06B6D4),
+                                unfocusedBorderColor = Color(0x44FFFFFF),
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(18.dp))
+
+                        Button(
+                            onClick = {
+                                selectedVerdict?.let { onSubmitVerdict(it, detectiveNotes) }
+                            },
+                            enabled = selectedVerdict != null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                                .focusRequester(submitButtonFocusRequester)
+                                .tvFocusVisual(
+                                    enabled = selectedVerdict != null,
+                                    focusBorderColor = Color.White,
+                                    shape = RoundedCornerShape(14.dp),
+                                    scaleOnFocus = 1.03f
+                                )
+                                .testTag("submit_verdict_button"),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF7C3AED),
+                                disabledContainerColor = Color(0xFF334155)
+                            )
+                        ) {
+                            Text(
+                                text = "Submit Official Verdict",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = Color.White
                             )
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Based on your investigation, classify this content to receive a full reliability assessment:",
-                        color = Color(0xFFCBD5E1),
-                        fontSize = 13.sp
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Verdict Choice Cards
-                    VerdictOptionCard(
-                        title = "Verified Authentic (Reliable)",
-                        subtitle = "Credible journalism, factual evidence, and verified institutions.",
-                        icon = Icons.Default.CheckCircle,
-                        accentColor = Color(0xFF10B981),
-                        isSelected = selectedVerdict == CaseVerdict.ACCURATE_CREDIBLE,
-                        onClick = { selectedVerdict = CaseVerdict.ACCURATE_CREDIBLE },
-                        testTag = "verdict_authentic"
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    VerdictOptionCard(
-                        title = "Misleading / Out of Context (Misinformation)",
-                        subtitle = "Real footage repurposed with false dates, altered timeline, or cut quotes.",
-                        icon = Icons.Default.Timer,
-                        accentColor = Color(0xFFF59E0B),
-                        isSelected = selectedVerdict == CaseVerdict.OUT_OF_CONTEXT,
-                        onClick = { selectedVerdict = CaseVerdict.OUT_OF_CONTEXT },
-                        testTag = "verdict_out_of_context"
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    VerdictOptionCard(
-                        title = "AI Generated / Manipulated (Misinformation)",
-                        subtitle = "Deepfake video, synthetic voice clone, or visual generative glitch.",
-                        icon = Icons.Default.SmartToy,
-                        accentColor = Color(0xFF8B5CF6),
-                        isSelected = selectedVerdict == CaseVerdict.AI_MANIPULATED,
-                        onClick = { selectedVerdict = CaseVerdict.AI_MANIPULATED },
-                        testTag = "verdict_ai"
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    VerdictOptionCard(
-                        title = "Clickbait Exaggeration (Misinformation)",
-                        subtitle = "Gross emotional exaggeration or hidden sales pitch to provoke clicks.",
-                        icon = Icons.Default.Warning,
-                        accentColor = Color(0xFFEF4444),
-                        isSelected = selectedVerdict == CaseVerdict.CLICKBAIT_EXAGGERATED,
-                        onClick = { selectedVerdict = CaseVerdict.CLICKBAIT_EXAGGERATED },
-                        testTag = "verdict_clickbait"
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Optional Notes Field
-                    OutlinedTextField(
-                        value = detectiveNotes,
-                        onValueChange = { detectiveNotes = it },
-                        label = { Text("What gave it away? (Optional Note)") },
-                        placeholder = { Text("e.g. The paws glitched, or the movie poster was from 2011...") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag("detective_notes_input"),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFF06B6D4),
-                            unfocusedBorderColor = Color(0x44FFFFFF),
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Button(
-                        onClick = {
-                            selectedVerdict?.let { onSubmitVerdict(it, detectiveNotes) }
-                        },
-                        enabled = selectedVerdict != null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                            .testTag("submit_verdict_button"),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF7C3AED),
-                            disabledContainerColor = Color(0xFF334155)
-                        )
-                    ) {
-                        Text(
-                            text = "Submit Official Verdict",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            color = Color.White
+                    } else {
+                        // Post-Verdict Celebration & FactCheckResult Debrief
+                        FactCheckFeedbackDebrief(
+                            result = submissionResult,
+                            mediaCase = mediaCase,
+                            newlyUnlockedBadges = newlyUnlockedBadges,
+                            onNextCase = onNextCase,
+                            onClose = onDismiss
                         )
                     }
-                } else {
-                    // Post-Verdict Celebration & FactCheckResult Debrief
-                    FactCheckFeedbackDebrief(
-                        result = submissionResult,
-                        mediaCase = mediaCase,
-                        newlyUnlockedBadges = newlyUnlockedBadges,
-                        onNextCase = onNextCase,
-                        onClose = onDismiss
-                    )
                 }
             }
         }
@@ -259,19 +351,20 @@ private fun VerdictOptionCard(
     accentColor: Color,
     isSelected: Boolean,
     onClick: () -> Unit,
-    testTag: String
+    testTag: String,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         shape = RoundedCornerShape(14.dp),
         color = if (isSelected) accentColor.copy(alpha = 0.15f) else Color(0xFF0F172A),
-        border = androidx.compose.foundation.BorderStroke(
+        border = BorderStroke(
             width = if (isSelected) 2.dp else 1.dp,
             color = if (isSelected) accentColor else Color(0x22FFFFFF)
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .tvFocusableClick(
-                focusBorderColor = accentColor,
+                focusBorderColor = Color.White,
                 shape = RoundedCornerShape(14.dp),
                 onClick = onClick
             )
@@ -322,6 +415,9 @@ private fun FactCheckFeedbackDebrief(
     onNextCase: () -> Unit,
     onClose: () -> Unit
 ) {
+    val nextCaseFocusRequester = remember { FocusRequester() }
+    RequestInitialTvFocus(focusRequester = nextCaseFocusRequester, triggerKey = result)
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -349,7 +445,7 @@ private fun FactCheckFeedbackDebrief(
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = Color(0xFF065F46),
-                border = androidx.compose.foundation.BorderStroke(2.dp, Color(0xFF34D399)),
+                border = BorderStroke(2.dp, Color(0xFF34D399)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
@@ -397,7 +493,7 @@ private fun FactCheckFeedbackDebrief(
         Surface(
             shape = RoundedCornerShape(8.dp),
             color = Color(result.accuracyGrade.badgeColor).copy(alpha = 0.2f),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(result.accuracyGrade.badgeColor)),
+            border = BorderStroke(1.dp, Color(result.accuracyGrade.badgeColor)),
             modifier = Modifier.padding(top = 4.dp)
         ) {
             Text(
@@ -463,7 +559,7 @@ private fun FactCheckFeedbackDebrief(
         Surface(
             shape = RoundedCornerShape(12.dp),
             color = Color(0x2238BDF8),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x4438BDF8)),
+            border = BorderStroke(1.dp, Color(0x4438BDF8)),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -595,6 +691,11 @@ private fun FactCheckFeedbackDebrief(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp)
+                    .tvFocusVisual(
+                        focusBorderColor = Color.White,
+                        shape = RoundedCornerShape(12.dp),
+                        scaleOnFocus = 1.03f
+                    )
                     .testTag("review_video_button"),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF334155))
@@ -607,6 +708,12 @@ private fun FactCheckFeedbackDebrief(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp)
+                    .focusRequester(nextCaseFocusRequester)
+                    .tvFocusVisual(
+                        focusBorderColor = Color.White,
+                        shape = RoundedCornerShape(12.dp),
+                        scaleOnFocus = 1.03f
+                    )
                     .testTag("next_case_button"),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF06B6D4))

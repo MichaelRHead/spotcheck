@@ -1,6 +1,8 @@
 package com.example.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,24 +43,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Image
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import com.example.R
 import com.example.data.model.MediaCase
 import com.example.ui.components.ClueDetailSheet
 import com.example.ui.components.CommentsDrawer
+import com.example.ui.components.RequestInitialTvFocus
 import com.example.ui.components.ScreenAudioMuteButton
 import com.example.ui.components.SimulatedVideoPlayer
 import com.example.ui.components.SourceCheckSheet
@@ -68,6 +77,7 @@ import com.example.ui.components.toSceneDrawableRes
 import com.example.ui.components.tvFocusableClick
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun FeedScreen(
@@ -77,6 +87,22 @@ fun FeedScreen(
 ) {
     val currentCase = uiState.currentCase ?: return
     val isTvDevice = isGoogleTvMode()
+
+    // Ensure TV Remote Back button closes any active popup or exits inspection radar cleanly
+    val hasActiveOverlay = uiState.inspectedClue != null ||
+        uiState.showCommentsSheet ||
+        uiState.showSourceCheckSheet ||
+        uiState.showVerdictDialog
+
+    BackHandler(enabled = hasActiveOverlay || uiState.isInspectionMode) {
+        when {
+            uiState.inspectedClue != null -> viewModel.dismissClueDetail()
+            uiState.showCommentsSheet -> viewModel.openCommentsSheet(false)
+            uiState.showSourceCheckSheet -> viewModel.openSourceCheckSheet(false)
+            uiState.showVerdictDialog -> viewModel.openVerdictDialog(false)
+            uiState.isInspectionMode -> viewModel.toggleInspectionMode()
+        }
+    }
 
     BoxWithConstraints(
         modifier = modifier
@@ -101,24 +127,16 @@ fun FeedScreen(
             )
         }
 
-        // Active Clue Detail Card Popup
+        // Active Clue Detail Card Popup (Focus-isolated Dialog)
         if (uiState.inspectedClue != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0x66000000))
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ClueDetailSheet(
-                    clue = uiState.inspectedClue!!,
-                    mediaCase = currentCase,
-                    onDismiss = { viewModel.dismissClueDetail() }
-                )
-            }
+            ClueDetailSheet(
+                clue = uiState.inspectedClue!!,
+                mediaCase = currentCase,
+                onDismiss = { viewModel.dismissClueDetail() }
+            )
         }
 
-        // Comments Bottom Sheet
+        // Comments Modal Sheet
         if (uiState.showCommentsSheet) {
             CommentsDrawer(
                 comments = currentCase.comments,
@@ -126,7 +144,7 @@ fun FeedScreen(
             )
         }
 
-        // Source Check Bottom Sheet
+        // Source Check Modal Sheet
         if (uiState.showSourceCheckSheet) {
             SourceCheckSheet(
                 mediaCase = currentCase,
@@ -159,6 +177,66 @@ private fun TvWidescreenFeedLayout(
     uiState: SpotCheckUiState,
     viewModel: SpotCheckViewModel
 ) {
+    val inspectCluesFocusRequester = remember { FocusRequester() }
+    val sourceCheckFocusRequester = remember { FocusRequester() }
+    val commentsFocusRequester = remember { FocusRequester() }
+    val verdictFocusRequester = remember { FocusRequester() }
+    val clueFocusRequesters = remember(currentCase.id) {
+        currentCase.clues.associate { it.id to FocusRequester() }
+    }
+
+    var lastOpenedClueId by remember(currentCase.id) { mutableStateOf<String?>(null) }
+    var wasCommentsOpen by remember { mutableStateOf(false) }
+    var wasSourceOpen by remember { mutableStateOf(false) }
+    var wasVerdictOpen by remember { mutableStateOf(false) }
+
+    // Set initial D-Pad focus onto the primary Inspect Clues button when a case loads
+    RequestInitialTvFocus(
+        focusRequester = inspectCluesFocusRequester,
+        triggerKey = currentCase.id
+    )
+
+    // Restore D-Pad focus back to the originating clue or action button when a popup closes
+    LaunchedEffect(uiState.inspectedClue) {
+        if (uiState.inspectedClue != null) {
+            lastOpenedClueId = uiState.inspectedClue.id
+        } else if (lastOpenedClueId != null) {
+            val targetRequester = clueFocusRequesters[lastOpenedClueId] ?: inspectCluesFocusRequester
+            delay(40)
+            runCatching { targetRequester.requestFocus() }
+        }
+    }
+
+    LaunchedEffect(uiState.showCommentsSheet) {
+        if (uiState.showCommentsSheet) {
+            wasCommentsOpen = true
+        } else if (wasCommentsOpen) {
+            wasCommentsOpen = false
+            delay(40)
+            runCatching { commentsFocusRequester.requestFocus() }
+        }
+    }
+
+    LaunchedEffect(uiState.showSourceCheckSheet) {
+        if (uiState.showSourceCheckSheet) {
+            wasSourceOpen = true
+        } else if (wasSourceOpen) {
+            wasSourceOpen = false
+            delay(40)
+            runCatching { sourceCheckFocusRequester.requestFocus() }
+        }
+    }
+
+    LaunchedEffect(uiState.showVerdictDialog) {
+        if (uiState.showVerdictDialog) {
+            wasVerdictOpen = true
+        } else if (wasVerdictOpen) {
+            wasVerdictOpen = false
+            delay(40)
+            runCatching { verdictFocusRequester.requestFocus() }
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -446,7 +524,9 @@ private fun TvWidescreenFeedLayout(
                     activeColor = Color(0xFF06B6D4),
                     onClick = { viewModel.toggleInspectionMode() },
                     testTag = "inspect_clues_button",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(inspectCluesFocusRequester)
                 )
 
                 TvDeckActionButton(
@@ -457,7 +537,9 @@ private fun TvWidescreenFeedLayout(
                     activeColor = Color(0xFFF59E0B),
                     onClick = { viewModel.openSourceCheckSheet(true) },
                     testTag = "source_check_button",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(sourceCheckFocusRequester)
                 )
             }
 
@@ -473,7 +555,9 @@ private fun TvWidescreenFeedLayout(
                     activeColor = Color(0xFF38BDF8),
                     onClick = { viewModel.openCommentsSheet(true) },
                     testTag = "feed_comments_button",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(commentsFocusRequester)
                 )
 
                 TvDeckActionButton(
@@ -484,7 +568,9 @@ private fun TvWidescreenFeedLayout(
                     activeColor = Color(0xFF7C3AED),
                     onClick = { viewModel.openVerdictDialog(true) },
                     testTag = "open_verdict_button",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(verdictFocusRequester)
                 )
             }
 
@@ -506,6 +592,7 @@ private fun TvWidescreenFeedLayout(
 
                     currentCase.clues.forEachIndexed { idx, clue ->
                         val discovered = clue.id in uiState.discoveredClueIds
+                        val clueRequester = clueFocusRequesters[clue.id]
                         Surface(
                             shape = RoundedCornerShape(12.dp),
                             color = if (discovered) Color(0xFF064E3B) else Color(0xFF0F172A),
@@ -516,8 +603,15 @@ private fun TvWidescreenFeedLayout(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
+                                .then(
+                                    if (clueRequester != null) {
+                                        Modifier.focusRequester(clueRequester)
+                                    } else {
+                                        Modifier
+                                    }
+                                )
                                 .tvFocusableClick(
-                                    focusBorderColor = Color(0xFF2DD4BF),
+                                    focusBorderColor = Color.White,
                                     shape = RoundedCornerShape(12.dp),
                                     onClick = {
                                         if (!uiState.isInspectionMode) {
@@ -526,6 +620,7 @@ private fun TvWidescreenFeedLayout(
                                         viewModel.onClueClicked(clue)
                                     }
                                 )
+                                .testTag("scanner_clue_${clue.id}")
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
@@ -580,7 +675,7 @@ private fun TvDeckActionButton(
         ),
         modifier = modifier
             .tvFocusableClick(
-                focusBorderColor = activeColor,
+                focusBorderColor = Color.White,
                 shape = RoundedCornerShape(14.dp),
                 onClick = onClick
             )
@@ -897,7 +992,7 @@ private fun FeedActionButton(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .tvFocusableClick(
-                focusBorderColor = activeColor,
+                focusBorderColor = Color.White,
                 shape = RoundedCornerShape(12.dp),
                 onClick = onClick
             )

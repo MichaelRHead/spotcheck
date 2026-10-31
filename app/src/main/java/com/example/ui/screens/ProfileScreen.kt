@@ -49,6 +49,7 @@ import com.example.R
 import com.example.data.model.DetectiveBadge
 import com.example.ui.components.ScreenAudioMuteButton
 import com.example.ui.components.toSceneDrawableRes
+import com.example.ui.components.tvFocusableCard
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
 
@@ -117,7 +118,12 @@ fun ProfileScreen(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .tvFocusableCard(
+                        focusBorderColor = Color(0xFFFBBF24),
+                        shape = RoundedCornerShape(20.dp)
+                    )
             ) {
                 Column(
                     modifier = Modifier
@@ -351,7 +357,12 @@ private fun BadgeCard(badge: DetectiveBadge) {
             1.dp,
             if (badge.isUnlocked) Color(badge.tier.colorHex) else Color(0x22FFFFFF)
         ),
-        modifier = Modifier.width(170.dp)
+        modifier = Modifier
+            .width(170.dp)
+            .tvFocusableCard(
+                focusBorderColor = Color(badge.tier.colorHex),
+                shape = RoundedCornerShape(16.dp)
+            )
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -458,7 +469,12 @@ private fun SolvedCaseRow(
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .tvFocusableCard(
+                focusBorderColor = if (solved.isCorrect) Color(0xFF10B981) else Color(0xFFFB923C),
+                shape = RoundedCornerShape(12.dp)
+            )
     ) {
         Row(
             modifier = Modifier.padding(14.dp),

@@ -56,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui.components.ScreenAudioMuteButton
+import com.example.ui.components.tvFocusVisual
+import com.example.ui.components.tvFocusableCard
 
 @Composable
 fun FieldGuideScreen(
@@ -143,7 +145,13 @@ fun FieldGuideScreen(
                             fontSize = 13.sp
                         )
                     },
-                    modifier = Modifier.testTag("guide_tab_$index")
+                    modifier = Modifier
+                        .tvFocusVisual(
+                            focusBorderColor = Color.White,
+                            shape = RoundedCornerShape(10.dp),
+                            scaleOnFocus = 1.02f
+                        )
+                        .testTag("guide_tab_$index")
                 )
             }
         }
@@ -250,7 +258,12 @@ private fun SiftDetailCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .tvFocusableCard(
+                focusBorderColor = color,
+                shape = RoundedCornerShape(16.dp)
+            )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -352,6 +365,10 @@ private fun ChecklistItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
+            .tvFocusableCard(
+                focusBorderColor = Color(0xFFA78BFA),
+                shape = RoundedCornerShape(14.dp)
+            )
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -448,6 +465,10 @@ private fun ClickbaitRedFlagWord(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
+            .tvFocusableCard(
+                focusBorderColor = Color(0xFFF87171),
+                shape = RoundedCornerShape(14.dp)
+            )
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {

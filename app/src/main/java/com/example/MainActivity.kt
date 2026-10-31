@@ -68,6 +68,7 @@ import com.example.data.local.SpotCheckDatabase
 import com.example.data.repository.MediaDetectiveRepository
 import com.example.ui.components.SpotCheckScreenAudioEffect
 import com.example.ui.components.isGoogleTvMode
+import com.example.ui.components.tvFocusVisual
 import com.example.ui.screens.FeedScreen
 import com.example.ui.screens.FieldGuideScreen
 import com.example.ui.screens.ProfileScreen
@@ -214,7 +215,13 @@ fun SpotCheckApp(viewModel: SpotCheckViewModel) {
                                 unselectedIconColor = Color(0xFF94A3B8),
                                 unselectedTextColor = Color(0xFF94A3B8)
                             ),
-                            modifier = Modifier.testTag("nav_item_feed")
+                            modifier = Modifier
+                                .tvFocusVisual(
+                                    focusBorderColor = Color.White,
+                                    shape = RoundedCornerShape(14.dp),
+                                    scaleOnFocus = 1.06f
+                                )
+                                .testTag("nav_item_feed")
                         )
 
                         NavigationRailItem(
@@ -241,7 +248,13 @@ fun SpotCheckApp(viewModel: SpotCheckViewModel) {
                                 unselectedIconColor = Color(0xFF94A3B8),
                                 unselectedTextColor = Color(0xFF94A3B8)
                             ),
-                            modifier = Modifier.testTag("nav_item_guide")
+                            modifier = Modifier
+                                .tvFocusVisual(
+                                    focusBorderColor = Color.White,
+                                    shape = RoundedCornerShape(14.dp),
+                                    scaleOnFocus = 1.06f
+                                )
+                                .testTag("nav_item_guide")
                         )
 
                         NavigationRailItem(
@@ -268,7 +281,13 @@ fun SpotCheckApp(viewModel: SpotCheckViewModel) {
                                 unselectedIconColor = Color(0xFF94A3B8),
                                 unselectedTextColor = Color(0xFF94A3B8)
                             ),
-                            modifier = Modifier.testTag("nav_item_sandbox")
+                            modifier = Modifier
+                                .tvFocusVisual(
+                                    focusBorderColor = Color.White,
+                                    shape = RoundedCornerShape(14.dp),
+                                    scaleOnFocus = 1.06f
+                                )
+                                .testTag("nav_item_sandbox")
                         )
 
                         NavigationRailItem(
@@ -295,7 +314,13 @@ fun SpotCheckApp(viewModel: SpotCheckViewModel) {
                                 unselectedIconColor = Color(0xFF94A3B8),
                                 unselectedTextColor = Color(0xFF94A3B8)
                             ),
-                            modifier = Modifier.testTag("nav_item_profile")
+                            modifier = Modifier
+                                .tvFocusVisual(
+                                    focusBorderColor = Color.White,
+                                    shape = RoundedCornerShape(14.dp),
+                                    scaleOnFocus = 1.06f
+                                )
+                                .testTag("nav_item_profile")
                         )
                     }
                 }
