@@ -69,14 +69,14 @@ BUILT FOR SAFETY & PRIVACY
 
 ---
 
-## 3. Release Notes (Version 11.0 / Version Code 11)
+## 3. Release Notes (Version 12.0 / Version Code 12)
 
 ```text
 <en-US>
 • Upgraded all 6 media detective cases with photorealistic photography, Ken Burns cinema motion, and real-time forensic HUD telemetry.
 • Added 2.6x Forensic Optical Zoom Loupe inside the Clue Inspector to examine physical AI artifacts, shadows, and archival timestamps.
-• Updated all Phone, Tablet, and Google TV store visuals and Solved Case Archive thumbnails.
-• Updated to Version 11.0 (versionCode 11).
+• Updated all Phone, Tablet, and Google TV store visuals, in-app TV banner, and Solved Case Archive thumbnails.
+• Updated to Version 12.0 (versionCode 12).
 </en-US>
 ```
 
