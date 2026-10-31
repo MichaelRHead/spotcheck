@@ -40,7 +40,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.example.data.model.DetectiveBadge
+import com.example.ui.components.toSceneDrawableRes
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
 
@@ -448,18 +453,38 @@ private fun SolvedCaseRow(
             modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                shape = CircleShape,
-                color = if (solved.isCorrect) Color(0xFF065F46) else Color(0xFF9A3412),
-                modifier = Modifier.size(36.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = if (solved.isCorrect) Icons.Default.CheckCircle else Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
+            if (mediaCase != null) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.5.dp,
+                        if (solved.isCorrect) Color(0xFF10B981) else Color(0xFFFB923C)
+                    ),
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = mediaCase.visualType.toSceneDrawableRes()),
+                        contentDescription = mediaCase.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(10.dp))
                     )
+                }
+            } else {
+                Surface(
+                    shape = CircleShape,
+                    color = if (solved.isCorrect) Color(0xFF065F46) else Color(0xFF9A3412),
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = if (solved.isCorrect) Icons.Default.CheckCircle else Icons.Default.Star,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
 

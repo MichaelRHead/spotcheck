@@ -49,6 +49,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.example.data.model.MediaCase
 import com.example.ui.components.ClueDetailSheet
 import com.example.ui.components.CommentsDrawer
@@ -56,6 +59,7 @@ import com.example.ui.components.SimulatedVideoPlayer
 import com.example.ui.components.SourceCheckSheet
 import com.example.ui.components.VerdictModal
 import com.example.ui.components.isGoogleTvMode
+import com.example.ui.components.toSceneDrawableRes
 import com.example.ui.components.tvFocusableClick
 import com.example.ui.viewmodel.SpotCheckUiState
 import com.example.ui.viewmodel.SpotCheckViewModel
@@ -103,6 +107,7 @@ fun FeedScreen(
             ) {
                 ClueDetailSheet(
                     clue = uiState.inspectedClue!!,
+                    mediaCase = currentCase,
                     onDismiss = { viewModel.dismissClueDetail() }
                 )
             }
@@ -334,16 +339,17 @@ private fun TvWidescreenFeedLayout(
                         Surface(
                             shape = CircleShape,
                             color = Color(currentCase.primarySceneColor),
+                            border = BorderStroke(1.5.dp, Color(0xFF38BDF8)),
                             modifier = Modifier.size(38.dp)
                         ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = currentCase.creatorDisplayName.take(1).uppercase(),
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
-                                )
-                            }
+                            Image(
+                                painter = painterResource(id = currentCase.visualType.toSceneDrawableRes()),
+                                contentDescription = currentCase.creatorDisplayName,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CircleShape)
+                            )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
@@ -665,16 +671,17 @@ private fun MobileCompactFeedLayout(
                 Surface(
                     shape = CircleShape,
                     color = Color(currentCase.primarySceneColor),
+                    border = BorderStroke(1.5.dp, Color(0xFF38BDF8)),
                     modifier = Modifier.size(36.dp)
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = currentCase.creatorDisplayName.take(1).uppercase(),
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                    }
+                    Image(
+                        painter = painterResource(id = currentCase.visualType.toSceneDrawableRes()),
+                        contentDescription = currentCase.creatorDisplayName,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Column {
